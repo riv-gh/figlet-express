@@ -8,6 +8,7 @@ COPY package-lock.json .
 RUN npm ci
 
 COPY index.js .
+COPY startPage.html .
 
 EXPOSE 3000
 

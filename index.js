@@ -1,5 +1,6 @@
 const express = require('express');
 const figlet = require('figlet');
+const fs = require('fs');
 
 const app = express();
 
@@ -15,35 +16,23 @@ const preBlockPage = (text, title='') => `<!DOCTYPE html>
 </body>
 </html>`;
 
-const startPage = () => `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enter text</title>
-</head>
-<body>
-    <form>
-        <input type="text" name="string" value="some text...">
-        <input type="submit" value="send">
-    </form>
-    <script>
-        document.forms[0].onsubmit = function() {
-            window.open('/' + encodeURIComponent(this.string.value));
-            return false;
-        }
-    </script>
-</body>
-</html>`;
+const startPageText = fs.readFileSync('./startPage.html').toString()
+
+
+const startPage = () => startPageText;
 
 app.get('/', (req, res) => {
     res.send(startPage());
 })
 
-app.get('/:string', async (req, res) => {
-    console.log(req.params);
+app.get('/page/:string', async (req, res) => {
     const data = await figlet(req.params.string);
     res.send(preBlockPage(data));
+})
+app.get('/text/', (req, res) => res.send(''));
+app.get('/text/:string', async (req, res) => {
+    const data = await figlet(req.params.string);
+    res.send(data);
 })
 
 const server = app.listen(3000, () => {

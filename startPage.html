@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter text</title>
+</head>
+<body>
+    <form>
+        <input type="text" name="string" value="some text...">
+        <input type="checkbox" name="autoupdate" id="autoupdate" checked="checked"><label for="autoupdate">autoupdate</label>
+        <input type="submit" value="open in new window">
+    </form>
+    <pre id="output"></pre>
+    <script>
+        const mainForm = document.forms[0];
+        const outputPre = document.getElementById('output');
+        const getText = (event = {target:{value:'some text...'}}) => {
+            fetch('/text/'+ encodeURIComponent(event.target.value))
+            .then(response => response.text())
+            .then(data => { outputPre.textContent = data })
+        }
+        getText();
+        mainForm.addEventListener('submit',(event) => {
+            event.preventDefault();
+            window.open('/page/'+ encodeURIComponent(event.target.string.value));
+        });
+        mainForm.string.addEventListener('keyup', (event) => {
+            if (mainForm.autoupdate.checked) 
+                getText(event);
+        });
+    </script>
+</body>
+</html>
