@@ -3,9 +3,8 @@ FROM node:current-alpine
 WORKDIR /app
 
 COPY package.json .
-COPY package-lock.json .
 
-RUN npm ci
+RUN npm install
 
 COPY index.js .
 COPY startPage.html .
